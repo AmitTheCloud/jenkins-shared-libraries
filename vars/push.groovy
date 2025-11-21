@@ -4,7 +4,9 @@ withCredentials([usernamePassword(
                     passwordVariable: "dockerHubPass",
                     usernameVariable: "dockerHubUser"
                 )]) {
-                    sh "docker login -u "${dockerHubUser}" -p "${dockerHubPass}"
+                     sh """
+                      echo "$dockerHubPass" | docker login -u "$dockerHubUser" --password-stdin
+                    """
                     sh "docker tag notes-app:latest ${dockerHubUser}/notes-app:${ImageTag}"
                     sh "docker push ${dockerHubUser}/${Project}:${ImageTag}"
                 }
